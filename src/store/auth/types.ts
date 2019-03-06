@@ -1,4 +1,5 @@
 import { User } from '../user/types'
+import { Action, PayloadAction } from '../types'
 
 export const AUTHENTICATE = '@auth/AUTHENTICATE'
 export const AUTHENTICATE_SUCCESS = '@auth/AUTHENTICATE_SUCCESS'
@@ -18,31 +19,12 @@ export interface Credentials {
   password: string
 }
 
-export interface AuthenticateAction {
-  type: typeof AUTHENTICATE,
-  payload: Credentials
-}
-
-export interface AuthenticateSuccessAction {
-  type: typeof AUTHENTICATE_SUCCESS,
-  payload: User
-}
-
-export interface AuthenticateFailedAction {
-  type: typeof AUTHENTICATE_FAILED
-}
-
-export interface AuthenticateLogoutAction {
-  type: typeof AUTHENTICATE_LOGOUT
-}
-
-export interface AuthenticateLogoutSuccessAction {
-  type: typeof AUTHENTICATE_LOGOUT_SUCCESS
-}
-
-export interface AuthenticateLogoutFailedAction {
-  type: typeof AUTHENTICATE_LOGOUT_FAILED
-}
+export type AuthenticateAction = PayloadAction<typeof AUTHENTICATE, Credentials>
+export type AuthenticateSuccessAction = PayloadAction<typeof AUTHENTICATE_SUCCESS, User>
+export type AuthenticateFailedAction = Action<typeof AUTHENTICATE_FAILED>
+export type AuthenticateLogoutAction = Action<typeof AUTHENTICATE_LOGOUT>
+export type AuthenticateLogoutSuccessAction = Action<typeof AUTHENTICATE_LOGOUT_SUCCESS>
+export type AuthenticateLogoutFailedAction = Action<typeof AUTHENTICATE_LOGOUT_FAILED>
 
 export type AuthActionType =
   AuthenticateAction |

@@ -1,3 +1,8 @@
+import { PayloadAction } from '../types'
+
+export const SNACKBAR_ADD = '@snackbar/ADD'
+export const SNACKBAR_REMOVE = '@snackbar/REMOVE'
+
 export enum SnackbarType {
   Success = 'success',
   Warning = 'warning',
@@ -11,18 +16,8 @@ export interface Snackbar {
 
 export type SnackbarState = Snackbar[]
 
-export const SNACKBAR_ADD = '@snackbar/ADD'
-export const SNACKBAR_REMOVE = '@snackbar/REMOVE'
-
-export interface SnackbarAddAction {
-  type: typeof SNACKBAR_ADD,
-  payload: Snackbar
-}
-
-export interface SnackbarRemoveAction {
-  type: typeof SNACKBAR_REMOVE,
-  payload: Snackbar
-}
+export type SnackbarAddAction = PayloadAction<typeof SNACKBAR_ADD, Snackbar>
+export type SnackbarRemoveAction = PayloadAction<typeof SNACKBAR_REMOVE, Snackbar>
 
 export type SnackbarActionType =
   SnackbarAddAction |
