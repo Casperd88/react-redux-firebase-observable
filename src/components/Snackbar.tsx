@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Snackbar as ISnackbar, SnackbarType } from '../store/snackbar/types'
+import { SnackbarType } from '../store/snackbar/types'
+import { RootState } from '../store/types'
 
 const colors = {
   [SnackbarType.Success]: 'green',
@@ -8,7 +9,13 @@ const colors = {
   [SnackbarType.Error]: 'red'
 }
 
-const Snackbar: React.FC<{snacks: ISnackbar[]}> = ({snacks}) => {
+const mapStateToProps = (state: RootState) => ({
+  snacks: state.snackbar
+})
+
+type Props = ReturnType<typeof mapStateToProps>
+
+const Snackbar: React.FC<Props> = ({snacks}) => {
   return (
     <ul>
     {snacks.map((snack, index) => (
@@ -20,8 +27,4 @@ const Snackbar: React.FC<{snacks: ISnackbar[]}> = ({snacks}) => {
   )
 }
 
-export default connect(
-  (state: any) => ({
-    snacks: state.snackbar
-  })
-)(Snackbar)
+export default connect(mapStateToProps)(Snackbar)

@@ -2,26 +2,31 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
-import { authenticate } from '../store/auth/actions'
-import { Credentials } from '../store/auth/types'
-import { snackbarAdd } from '../store/snackbar/actions'
-import { Snackbar, SnackbarType } from '../store/snackbar/types'
+import { login } from '../store/auth/actions'
+import { addSnackbar } from '../store/snackbar/actions'
+import { SnackbarType } from '../store/snackbar/types'
+import { RootState } from '../store/types'
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string().required('Required')
 })
 
-interface LoginFormProps {
-  authenticate: (credentials: Credentials) => void
-  snackbarAdd: (snackbar: Snackbar) => void
-  isAuthenticating: boolean
+const mapStateToProps = (state: RootState) => ({
+  isAuthenticating: state.auth.isAuthenticating
+})
+
+const dispatchToProps = {
+  addSnackbar,
+  login
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({
-  authenticate,
+type Props = ReturnType<typeof mapStateToProps> & typeof dispatchToProps
+
+const LoginForm: React.FC<Props> = ({
+  login,
   isAuthenticating,
-  snackbarAdd
+  addSnackbar
 }) => {
 
   return (
@@ -29,11 +34,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
       initialValues={{email: '', password: ''}}
       validationSchema={LoginSchema}
       onSubmit={(values) => {
-        snackbarAdd({
+        addSnackbar({
           message: `Authenticating with email: ${values.email}`,
           type: SnackbarType.Success
         })
-        authenticate(values)
+        login(values)
       }}
     >
     {({
@@ -53,15 +58,4 @@ const LoginForm: React.FC<LoginFormProps> = ({
   )
 }
 
-export default connect((state: any) => ({
-  isAuthenticating: state.auth.isAuthenticating
-}), (dispatch) => {
-  return {
-    authenticate(credentials: Credentials) {
-      dispatch(authenticate(credentials))
-    },
-    snackbarAdd(snackbar: Snackbar) {
-      dispatch(snackbarAdd(snackbar))
-    }
-  }
-})(LoginForm)
+export default connect(mapStateToProps, dispatchToProps)(LoginForm)

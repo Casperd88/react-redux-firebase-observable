@@ -1,20 +1,17 @@
-import {
-  SnackbarState,
-  SnackbarActionType,
-  SNACKBAR_ADD,
-  SNACKBAR_REMOVE
-} from './types'
+import { Snackbar } from './types'
+import * as SnackbarActions from './actions'
+import { getType, ActionType } from 'typesafe-actions'
 
-const defaultState: SnackbarState = []
+const defaultState: Snackbar[] = []
 
 export function snackbarReducer(
-  state: SnackbarState = defaultState,
-  action: SnackbarActionType
-): SnackbarState {
+  state: Snackbar[] = defaultState,
+  action: ActionType<typeof SnackbarActions>
+) {
   switch (action.type) {
-    case SNACKBAR_ADD:
+    case getType(SnackbarActions.addSnackbar):
       return [...state, action.payload]
-    case SNACKBAR_REMOVE:
+    case getType(SnackbarActions.removeSnackbar):
       return state.filter(snackbar => snackbar !== action.payload)
     default:
       return state

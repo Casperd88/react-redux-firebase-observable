@@ -1,11 +1,6 @@
-import {
-  AuthState,
-  AuthActionType,
-  AUTHENTICATE,
-  AUTHENTICATE_SUCCESS,
-  AUTHENTICATE_FAILED,
-  AUTHENTICATE_LOGOUT_SUCCESS
-} from './types'
+import { getType, ActionType } from 'typesafe-actions'
+import { AuthState } from './types'
+import * as AuthActions from './actions'
 
 const defaultState: AuthState = {
   isAuthenticated: false,
@@ -14,22 +9,22 @@ const defaultState: AuthState = {
 
 export function authReducer(
   state: AuthState = defaultState,
-  action: AuthActionType
+  action: ActionType<typeof AuthActions>
 ): AuthState {
   switch (action.type) {
-    case AUTHENTICATE:
+    case getType(AuthActions.login):
       return {
         isAuthenticated: false,
         isAuthenticating: true
       }
-    case AUTHENTICATE_SUCCESS:
+    case getType(AuthActions.loginSuccess):
       return {
         isAuthenticated: true,
         isAuthenticating: false,
         user: action.payload
       }
-    case AUTHENTICATE_FAILED:
-    case AUTHENTICATE_LOGOUT_SUCCESS:
+    case getType(AuthActions.loginFailure):
+    case getType(AuthActions.logoutSuccess):
       return {
         isAuthenticated: false,
         isAuthenticating: false

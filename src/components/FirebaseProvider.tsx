@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import firebase from 'firebase'
-import {authenticateSuccess, authenticateLogoutSuccess} from '../store/auth/actions'
-import { User } from '../store/user/types'
+import {loginSuccess, logoutSuccess} from '../store/auth/actions'
 
-interface FirebaseProviderProps {
-  authenticateSuccess: (user: User) => void
-  authenticateLogoutSuccess: () => void
-  config: object
+const dispatchToProps = {
+  loginSuccess,
+  logoutSuccess
 }
 
-const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
-  authenticateSuccess,
-  authenticateLogoutSuccess,
+type Props = typeof dispatchToProps & {config: object}
+
+const FirebaseProvider: React.FC<Props> = ({
+  loginSuccess,
+  logoutSuccess,
   children,
   config
 }) => {
@@ -23,9 +23,9 @@ const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
     firebase.initializeApp(config)
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        authenticateSuccess({email: String(user.email)})
+        loginSuccess({email: String(user.email)})
       } else {
-        authenticateLogoutSuccess()
+        logoutSuccess()
       }
       setLoading(false)
     })
@@ -34,11 +34,4 @@ const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
   return loading ? null : (<>{children}</>)
 }
 
-export default connect(null, dispatch => ({
-  authenticateSuccess(user: User) {
-    dispatch(authenticateSuccess(user))
-  },
-  authenticateLogoutSuccess() {
-    dispatch(authenticateLogoutSuccess())
-  }
-}))(FirebaseProvider)
+export default connect(null, dispatchToProps)(FirebaseProvider)

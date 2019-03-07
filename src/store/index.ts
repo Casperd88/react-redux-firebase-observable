@@ -14,9 +14,11 @@ const rootEpic = combineEpics(
   snackbarEpic
 )
 
-export default createStore(combineReducers({
+export const rootReducer = combineReducers({
   auth: authReducer,
   snackbar: snackbarReducer
-}), applyMiddleware(epicMiddleware, logger))
+})
+
+export default createStore(rootReducer, applyMiddleware(epicMiddleware, logger))
 
 epicMiddleware.run(rootEpic)

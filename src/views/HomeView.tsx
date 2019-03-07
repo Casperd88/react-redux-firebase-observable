@@ -1,8 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { authenticateLogout } from '../store/auth/actions'
+import { logout } from '../store/auth/actions'
 
-const Home: React.FC<{logout: () => void}> = ({logout}) => {
+const dispatchToProps = {logout}
+
+const Home: React.FC<typeof dispatchToProps> = ({logout}) => {
   return (
     <>
       <h1>Welcome home</h1>
@@ -11,8 +13,4 @@ const Home: React.FC<{logout: () => void}> = ({logout}) => {
   )
 }
 
-export default connect(null, dispatch => ({
-  logout() {
-    dispatch(authenticateLogout())
-  }
-}))(Home)
+export default connect(null, dispatchToProps)(Home)

@@ -1,21 +1,5 @@
-import {
-  Snackbar,
-  SnackbarAddAction,
-  SnackbarRemoveAction,
-  SNACKBAR_ADD,
-  SNACKBAR_REMOVE
-} from './types'
+import { createStandardAction } from 'typesafe-actions'
+import { Snackbar } from './types'
 
-export function snackbarAdd(snackbar: Snackbar): SnackbarAddAction {
-  return {
-    type: SNACKBAR_ADD,
-    payload: snackbar
-  }
-}
-
-export function snackbarRemove(snackbar: Snackbar): SnackbarRemoveAction {
-  return {
-    type: SNACKBAR_REMOVE,
-    payload: snackbar
-  }
-}
+export const addSnackbar = createStandardAction('@snackbad/ADD')<Snackbar>()
+export const removeSnackbar = createStandardAction('@snackbad/REMOVE')<Snackbar>()

@@ -1,23 +1,32 @@
-import { Epic, ofType } from 'redux-observable'
-import { mergeMap, catchError, take } from 'rxjs/operators'
+import { Epic } from 'redux-observable'
+import { mergeMap, catchError, take, filter } from 'rxjs/operators'
 import { of, from } from 'rxjs'
-import { AUTHENTICATE, AUTHENTICATE_LOGOUT } from './types'
-import { authenticateSuccess, authenticateFailed, authenticateLogoutSuccess, authenticateLogoutFailed } from './actions'
-import { snackbarAdd } from '../snackbar/actions'
+
+import {
+  login,
+  loginSuccess,
+  loginFailure,
+  logout,
+  logoutSuccess,
+  logoutFailure
+} from './actions'
+
+import { addSnackbar } from '../snackbar/actions'
 import { SnackbarType } from '../snackbar/types'
 import firebase from 'firebase'
+import { isActionOf } from 'typesafe-actions'
 
 export const authLogoutEpic: Epic = action$ => {
   return action$.pipe(
-    ofType(AUTHENTICATE_LOGOUT),
+    filter(isActionOf(logout)),
     mergeMap(
       () => from(firebase.auth().signOut())
         .pipe(
           take(1),
-          mergeMap(() => of(authenticateLogoutSuccess())),
+          mergeMap(() => of(logoutSuccess())),
           catchError(error => of(
-            authenticateLogoutFailed(),
-            snackbarAdd({message: error.message, type: SnackbarType.Error})
+            logoutFailure(),
+            addSnackbar({message: error.message, type: SnackbarType.Error})
           ))
         )
     )
@@ -26,7 +35,7 @@ export const authLogoutEpic: Epic = action$ => {
 
 export const authEpic: Epic = action$ => {
   return action$.pipe(
-    ofType(AUTHENTICATE),
+    filter(isActionOf(login)),
     mergeMap(({payload: {email, password}}) => {
       return from(firebase.auth().signInWithEmailAndPassword(
         email,
@@ -35,16 +44,16 @@ export const authEpic: Epic = action$ => {
         mergeMap(response => {
           return response.user
             ? of(
-              authenticateSuccess({email: String(response.user.email)}),
-              snackbarAdd({message: 'Login Success!', type: SnackbarType.Success})
+              loginSuccess({email: String(response.user.email)}),
+              addSnackbar({message: 'Login Success!', type: SnackbarType.Success})
             )
             : of(
-              authenticateFailed()
+              loginFailure()
             )
         }),
         catchError((error) => of(
-          authenticateFailed(),
-          snackbarAdd({message: error.message, type: SnackbarType.Error})
+          loginFailure(),
+          addSnackbar({message: error.message, type: SnackbarType.Error})
         ))
       )
     })

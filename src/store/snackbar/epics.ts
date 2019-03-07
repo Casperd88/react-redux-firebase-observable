@@ -1,12 +1,12 @@
-import { Epic, ofType } from 'redux-observable'
-import { map, delay } from 'rxjs/operators'
-import { snackbarRemove } from './actions'
-import { SNACKBAR_ADD } from './types'
+import { Epic } from 'redux-observable'
+import { map, delay, filter } from 'rxjs/operators'
+import { removeSnackbar, addSnackbar } from './actions'
+import { isActionOf } from 'typesafe-actions'
 
 export const snackbarEpic: Epic = action$ => {
   return action$.pipe(
-    ofType(SNACKBAR_ADD),
+    filter(isActionOf(addSnackbar)),
     delay(3000),
-    map((action) => snackbarRemove(action.payload))
+    map((action) => removeSnackbar(action.payload))
   )
 }
