@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Switch } from 'react-router-dom'
 import Snackbar from './components/Snackbar'
 import AuthRoute from './components/AuthRoute'
 import LoginView from './views/LoginView'
@@ -22,6 +22,7 @@ const App = () => {
             component={LoginView}
             redirectTo="/"
           />
+          <Redirect to="/" />
         </Switch>
       </Router>
     </section>

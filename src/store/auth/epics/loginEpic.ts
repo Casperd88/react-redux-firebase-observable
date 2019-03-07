@@ -1,44 +1,46 @@
+import { Epic, StateObservable } from 'redux-observable'
+import { mergeMap, catchError, concat, filter } from 'rxjs/operators'
+import { of, from } from 'rxjs'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
-import { Epic } from 'redux-observable'
-import { mergeMap, catchError, filter } from 'rxjs/operators'
-import { of, from } from 'rxjs'
-
 import {
-  login,
-  loginSuccess,
-  loginFailure
+  loginRequest,
+  loginAuthenticating,
+  loginAuthenticationFailure,
+  loginAuthenticationSuccess
 } from '../actions'
 
-import { addSnackbar } from '../../snackbar/actions'
-import { SnackbarType } from '../../snackbar/types'
 import { isActionOf } from 'typesafe-actions'
+import { RootState } from '../../types'
 
-const loginEpic: Epic = action$ => {
+const loginEpic: Epic = (action$, state$: StateObservable<RootState>) => {
   return action$.pipe(
-    filter(isActionOf(login)),
-    mergeMap(({payload: {email, password}}) => {
-      return from(firebase.auth().signInWithEmailAndPassword(
-        email,
-        password
-      )).pipe(
-        mergeMap(response => {
-          return response.user
-            ? of(
-              loginSuccess({email: String(response.user.email)}),
-              addSnackbar({message: 'Login Success!', type: SnackbarType.Success})
-            )
-            : of(
-              loginFailure()
-            )
-        }),
-        catchError((error) => of(
-          loginFailure(),
-          addSnackbar({message: error.message, type: SnackbarType.Error})
-        ))
-      )
-    })
+    filter(isActionOf(loginRequest)),
+    filter(() => !state$.value.auth.isAuthenticating),
+    mergeMap(
+      action => {
+        return of(loginAuthenticating()).pipe(
+          concat(from(firebase.auth().signInWithEmailAndPassword(
+            action.payload.email,
+            action.payload.password
+          )).pipe(
+            mergeMap(response => {
+              if (response.user) {
+                return of(
+                  loginAuthenticationSuccess({
+                    email: String(response.user.email)
+                  })
+                )
+              } else {
+                return of(loginAuthenticationFailure())
+              }
+            }),
+            catchError(() => of(loginAuthenticationFailure()))
+          ))
+        )
+      }
+    )
   )
 }
 
