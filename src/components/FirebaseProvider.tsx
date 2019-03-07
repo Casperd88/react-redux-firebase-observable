@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import firebase from 'firebase/app'
-import {loginSuccess, logoutSuccess} from '../store/auth/actions'
+import { loginSuccess, logoutSuccess } from '../store/auth/actions'
 
 const dispatchToProps = {
   loginSuccess,

@@ -4,12 +4,12 @@ import LoginForm from './../components/LoginForm'
 
 const LoginView: React.FC<{}> = () => {
   return (
-    <section>
+    <main>
       <h2>Log in</h2>
       <LoginForm />
       <Link to="/reset-password">Reset Password</Link> |
       <Link to="/register">Create Account</Link>
-    </section>
+    </main>
   )
 }
 
