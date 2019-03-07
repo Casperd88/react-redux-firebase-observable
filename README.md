@@ -1,1 +1,1 @@
-# firebase-redux-observable
+# typescript-react-redux-observable
