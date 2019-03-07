@@ -7,8 +7,8 @@ const dispatchToProps = {logout}
 const Home: React.FC<typeof dispatchToProps> = ({logout}) => {
   return (
     <>
-      <h1>Welcome home</h1>
-      <button onClick={logout}>Logout</button>
+      <h1>HomeView</h1>
+      <button onClick={() => logout()}>Logout()</button>
     </>
   )
 }

@@ -28,7 +28,6 @@ const LoginForm: React.FC<Props> = ({
   isAuthenticating,
   addSnackbar
 }) => {
-
   return (
     <Formik
       initialValues={{email: '', password: ''}}

@@ -1,37 +1,31 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
 import Snackbar from './components/Snackbar'
-// Views
+import AuthRoute from './components/AuthRoute'
 import LoginView from './views/LoginView'
 import HomeView from './views/HomeView'
 
-const App: React.FC<{isAuthenticated: boolean}> = ({isAuthenticated}) => {
+const App = () => {
   return (
     <section>
       <Snackbar />
       <Router>
-        <>
-        {isAuthenticated && (
-          <>
-            <Route exact path="/" component={HomeView} />
-            <Redirect to='/' />
-          </>
-        )}
-        {!isAuthenticated && (
-          <>
-            <Route exact path="/login" component={LoginView} />
-            <Route exact path="/reset-password" component={LoginView} />
-            <Route exact path="/register" component={LoginView} />
-            <Redirect to='/login' />
-          </>
-        )}
-        </>
+        <Switch>
+          <AuthRoute
+            exact path="/"
+            component={HomeView}
+            redirectTo="/login"
+            privateRoute={true}
+          />
+          <AuthRoute
+            exact path="/login"
+            component={LoginView}
+            redirectTo="/"
+          />
+        </Switch>
       </Router>
     </section>
   )
 }
 
-export default connect((state: any) => ({
-  isAuthenticated: state.auth.isAuthenticated
-}))(App)
+export default App

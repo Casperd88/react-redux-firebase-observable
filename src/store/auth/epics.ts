@@ -1,3 +1,6 @@
+import firebase from 'firebase/app'
+import 'firebase/auth'
+
 import { Epic } from 'redux-observable'
 import { mergeMap, catchError, take, filter } from 'rxjs/operators'
 import { of, from } from 'rxjs'
@@ -13,7 +16,6 @@ import {
 
 import { addSnackbar } from '../snackbar/actions'
 import { SnackbarType } from '../snackbar/types'
-import firebase from 'firebase'
 import { isActionOf } from 'typesafe-actions'
 
 export const authLogoutEpic: Epic = action$ => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
 import {loginSuccess, logoutSuccess} from '../store/auth/actions'
 
 const dispatchToProps = {
@@ -21,7 +21,7 @@ const FirebaseProvider: React.FC<Props> = ({
 
   useEffect(() => {
     firebase.initializeApp(config)
-    firebase.auth().onAuthStateChanged(user => {
+    return firebase.auth().onAuthStateChanged(user => {
       if (user) {
         loginSuccess({email: String(user.email)})
       } else {
