@@ -1,5 +1,5 @@
 import { Epic } from 'redux-observable'
-import { take, filter, mergeMap } from 'rxjs/operators'
+import { filter, mergeMap } from 'rxjs/operators'
 import { Observable, Observer } from 'rxjs'
 import { isActionOf } from 'typesafe-actions'
 import firebase from 'firebase/app'
@@ -24,7 +24,6 @@ const authChange$ = Observable.create((observer: Observer<ActionType>) => {
 const authChangeEpic: Epic = (action$) => {
   return action$.pipe(
     filter(isActionOf(initSystem)),
-    take(1),
     mergeMap(() => authChange$)
   )
 }
