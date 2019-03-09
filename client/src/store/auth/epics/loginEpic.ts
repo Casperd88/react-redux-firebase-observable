@@ -7,7 +7,6 @@ import 'firebase/auth'
 import { requestLogin, loginRequested, loginFailure} from '../actions'
 
 const signIn = (email: string, password: string) => {
-  console.log('trying to login')
   return firebase.auth().signInWithEmailAndPassword(email, password)
 }
 

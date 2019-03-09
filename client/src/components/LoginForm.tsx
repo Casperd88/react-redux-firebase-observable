@@ -2,6 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Link from './Link'
 import { requestLogin } from '../store/auth/actions'
 import { addSnackbar } from '../store/snackbar/actions'
 import { SnackbarType } from '../store/snackbar/types'
@@ -32,12 +36,13 @@ const LoginForm: React.FC<Props> = ({
     <Formik
       initialValues={{email: '', password: ''}}
       validationSchema={LoginSchema}
-      onSubmit={(values) => {
+      onSubmit={(values, { resetForm }) => {
         addSnackbar({
           message: `Authenticating with email: ${values.email}`,
           type: SnackbarType.Success
         })
         requestLogin(values)
+        resetForm()
       }}
     >
     {({
@@ -46,11 +51,58 @@ const LoginForm: React.FC<Props> = ({
       handleSubmit
     }) => (
       <form onSubmit={handleSubmit}>
-        <Field type="email" name="email" placeholder="Email" /><br />
-        {errors.email && touched.email ? <div>{errors.email}</div> : null}
-        <Field type="password" name="password" placeholder="Password" /><br />
-        {errors.password && touched.password ? <div>{errors.password}</div> : null}
-        <button disabled={isAuthenticating} type="submit">Log in</button>
+        <Grid container>
+          <Grid item xs={12} style={{marginBottom: '1em'}}>
+            <Field
+              name="email"
+              render={({field}: {field: any}) => (<TextField
+                type="email"
+                variant="standard"
+                placeholder="Email"
+                label="Email"
+                fullWidth
+                error={errors.email && touched.email}
+                helperText={errors.email && touched.email ? errors.email : null}
+                {...field}
+              />)}
+            />
+          </Grid>
+          <Grid item xs={12} style={{marginBottom: '1em'}}>
+            <Field
+              name="password"
+              render={({field}: {field: any}) => (<TextField
+                type="password"
+                variant="standard"
+                placeholder="Password"
+                label="Password"
+                fullWidth
+                error={errors.password && touched.password}
+                helperText={errors.password && touched.password ? errors.password : null}
+                {...field}
+              />)}
+            />
+          </Grid>
+          <Grid item xs={12} style={{marginBottom: '2em'}}>
+            <Link variant="body1" to="/">Forgot Password?</Link>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={isAuthenticating}
+              size="large"
+              style={{marginBottom: '1em'}}
+            >Log in</Button>
+            <Button
+              variant="text"
+              color="default"
+              fullWidth
+              size="large"
+            >Create Account</Button>
+          </Grid>
+        </Grid>
       </form>
     )}
     </Formik>
