@@ -3,6 +3,7 @@ import { AuthState } from './types'
 import * as AuthActions from './actions'
 
 const defaultState: AuthState = {
+  isInitialized: false,
   isAuthenticated: false,
   isAuthenticating: false
 }
@@ -12,22 +13,22 @@ export function authReducer(
   action: ActionType<typeof AuthActions>
 ): AuthState {
   switch (action.type) {
-    case getType(AuthActions.loginAuthenticating):
+    case getType(AuthActions.login):
       return {
-        isAuthenticated: false,
-        isAuthenticating: true
-      }
-    case getType(AuthActions.loginAuthenticationSuccess):
-      return {
+        ...state,
+        isInitialized: true,
         isAuthenticated: true,
         isAuthenticating: false,
         user: action.payload
       }
-    case getType(AuthActions.loginAuthenticationFailure):
-    case getType(AuthActions.logoutSuccess):
+    case getType(AuthActions.loginFailure):
+    case getType(AuthActions.logout):
       return {
+        ...state,
+        isInitialized: true,
         isAuthenticated: false,
-        isAuthenticating: false
+        isAuthenticating: false,
+
       }
     default:
       return state

@@ -1,46 +1,24 @@
-import { Epic, StateObservable } from 'redux-observable'
-import { mergeMap, catchError, concat, filter } from 'rxjs/operators'
+import { Epic } from 'redux-observable'
+import { mergeMap, filter, mapTo, catchError } from 'rxjs/operators'
 import { of, from } from 'rxjs'
+import { isActionOf } from 'typesafe-actions'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import { requestLogin, loginRequested, loginFailure} from '../actions'
 
-import {
-  loginRequest,
-  loginAuthenticating,
-  loginAuthenticationFailure,
-  loginAuthenticationSuccess
-} from '../actions'
+const signIn = (email: string, password: string) => {
+  return firebase.auth().signInWithEmailAndPassword(email, password)
+}
 
-import { isActionOf } from 'typesafe-actions'
-import { RootState } from '../../types'
-
-const loginEpic: Epic = (action$, state$: StateObservable<RootState>) => {
+const loginEpic: Epic = (action$) => {
   return action$.pipe(
-    filter(isActionOf(loginRequest)),
-    filter(() => !state$.value.auth.isAuthenticating),
+    filter(isActionOf(requestLogin)),
     mergeMap(
-      action => {
-        return of(loginAuthenticating()).pipe(
-          concat(from(firebase.auth().signInWithEmailAndPassword(
-            action.payload.email,
-            action.payload.password
-          )).pipe(
-            mergeMap(response => {
-              if (response.user) {
-                return of(
-                  loginAuthenticationSuccess({
-                    email: String(response.user.email)
-                  })
-                )
-              } else {
-                return of(loginAuthenticationFailure())
-              }
-            }),
-            catchError(() => of(loginAuthenticationFailure()))
-          ))
-        )
-      }
-    )
+      ({payload: {email, password}}) => from(signIn(email, password)
+    ).pipe(
+      mapTo(loginRequested()),
+      catchError(() => of(loginFailure()))
+    ))
   )
 }
 

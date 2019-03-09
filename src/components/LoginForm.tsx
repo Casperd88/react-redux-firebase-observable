@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
-import { loginRequest } from '../store/auth/actions'
+import { requestLogin } from '../store/auth/actions'
 import { addSnackbar } from '../store/snackbar/actions'
 import { SnackbarType } from '../store/snackbar/types'
 import { RootState } from '../store/types'
@@ -18,13 +18,13 @@ const mapStateToProps = (state: RootState) => ({
 
 const dispatchToProps = {
   addSnackbar,
-  loginRequest
+  requestLogin
 }
 
 type Props = ReturnType<typeof mapStateToProps> & typeof dispatchToProps
 
 const LoginForm: React.FC<Props> = ({
-  loginRequest,
+  requestLogin,
   isAuthenticating,
   addSnackbar
 }) => {
@@ -37,7 +37,7 @@ const LoginForm: React.FC<Props> = ({
           message: `Authenticating with email: ${values.email}`,
           type: SnackbarType.Success
         })
-        loginRequest(values)
+        requestLogin(values)
       }}
     >
     {({

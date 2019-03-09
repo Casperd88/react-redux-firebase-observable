@@ -1,25 +1,18 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import { Epic } from 'redux-observable'
-import { mergeMap, catchError, filter } from 'rxjs/operators'
-import { of, from } from 'rxjs'
-import { logout, logoutSuccess, logoutFailure} from '../actions'
-import { addSnackbar } from '../../snackbar/actions'
-import { SnackbarType } from '../../snackbar/types'
+import { mapTo, mergeMap, filter } from 'rxjs/operators'
+import { from } from 'rxjs'
+import { requestLogout, logoutRequested } from '../actions'
 import { isActionOf } from 'typesafe-actions'
+
+const signOut = () => firebase.auth().signOut()
 
 const logoutEpic: Epic = action$ => {
   return action$.pipe(
-    filter(isActionOf(logout)),
+    filter(isActionOf(requestLogout)),
     mergeMap(
-      () => from(firebase.auth().signOut())
-        .pipe(
-          mergeMap(() => of(logoutSuccess())),
-          catchError(error => of(
-            logoutFailure(),
-            addSnackbar({message: error.message, type: SnackbarType.Error})
-          ))
-        )
+      () => from(signOut()).pipe(mapTo(logoutRequested()))
     )
   )
 }

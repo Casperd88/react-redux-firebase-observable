@@ -1,0 +1,32 @@
+import { Epic } from 'redux-observable'
+import { take, filter, mergeMap } from 'rxjs/operators'
+import { Observable, Observer } from 'rxjs'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import { login, logout } from '../actions'
+import { initSystem } from '../../system/actions'
+import { isActionOf } from 'typesafe-actions'
+
+type ActionType =
+  ReturnType<typeof login> |
+  ReturnType<typeof logout>
+
+const authChange$ = Observable.create((observer: Observer<ActionType>) => {
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      observer.next(login({email: String(user.email)}))
+    } else {
+      observer.next(logout())
+    }
+  })
+})
+
+const authChangeEpic: Epic = (action$) => {
+  return action$.pipe(
+    filter(isActionOf(initSystem)),
+    take(1),
+    mergeMap(() => authChange$)
+  )
+}
+
+export default authChangeEpic
