@@ -4,7 +4,7 @@ export interface AuthState {
   isInitialized: boolean
   isAuthenticating: boolean
   isAuthenticated: boolean
-  user?: User
+  user: User | null
 }
 
 export interface Credentials {

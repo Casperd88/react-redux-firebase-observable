@@ -1,11 +1,11 @@
 import { Epic } from 'redux-observable'
 import { take, filter, mergeMap } from 'rxjs/operators'
 import { Observable, Observer } from 'rxjs'
+import { isActionOf } from 'typesafe-actions'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import { login, logout } from '../actions'
 import { initSystem } from '../../system/actions'
-import { isActionOf } from 'typesafe-actions'
 
 type ActionType =
   ReturnType<typeof login> |
