@@ -1,27 +1,26 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { BrowserRouter as Router, Redirect, Switch } from 'react-router-dom'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import { MuiThemeProvider } from '@material-ui/core/styles'
-import Snackbar from './components/Snackbar'
-import AuthRoute from './components/AuthRoute'
-import LoginView from './views/LoginView'
-import HomeView from './views/HomeView'
-import { RootState } from './store/types'
-import theme from './theme'
+import React from "react";
+import { connect } from "react-redux";
+import { BrowserRouter as Router, Redirect, Switch } from "react-router-dom";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { MuiThemeProvider } from "@material-ui/core/styles";
+import Snackbar from "./components/Snackbar";
+import AuthRoute from "./components/AuthRoute";
+import LoginView from "./views/LoginView";
+import HomeView from "./views/HomeView";
+import { RootState } from "./store/types";
+import theme from "./theme";
 
 const mapStateToProps = (state: RootState) => ({
-  authInitialized: state.auth.isInitialized
-})
+  initialized: state.auth.initialized
+});
 
-type Props = ReturnType<typeof mapStateToProps>
+type Props = ReturnType<typeof mapStateToProps>;
 
-const App: React.FC<Props> = ({authInitialized}) => {
+export const App: React.FC<Props> = ({ initialized }) => {
+  let content: React.ReactNode;
 
-  let content: React.ReactNode
-
-  if (!authInitialized) {
-    content = <>Loading</>
+  if (!initialized) {
+    content = <>Loading</>;
   } else {
     content = (
       <>
@@ -29,13 +28,15 @@ const App: React.FC<Props> = ({authInitialized}) => {
         <Router>
           <Switch>
             <AuthRoute
-              exact path="/"
+              exact
+              path="/"
               component={HomeView}
               redirectTo="/login"
               privateRoute={true}
             />
             <AuthRoute
-              exact path="/login"
+              exact
+              path="/login"
               component={LoginView}
               redirectTo="/"
             />
@@ -43,7 +44,7 @@ const App: React.FC<Props> = ({authInitialized}) => {
           </Switch>
         </Router>
       </>
-    )
+    );
   }
 
   return (
@@ -51,7 +52,7 @@ const App: React.FC<Props> = ({authInitialized}) => {
       <CssBaseline />
       {content}
     </MuiThemeProvider>
-  )
-}
+  );
+};
 
-export default connect(mapStateToProps)(App)
+export default connect(mapStateToProps)(App);

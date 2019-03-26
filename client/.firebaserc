@@ -1,5 +1,6 @@
 {
   "projects": {
-    "staging": "vana-98857"
+    "staging": "vana-98857",
+    "default": "vana-98857"
   }
 }

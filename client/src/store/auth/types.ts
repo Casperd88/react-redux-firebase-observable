@@ -1,13 +1,12 @@
-import { User } from '../user/types'
+export type AuthToken = string | null;
 
 export interface AuthState {
-  isInitialized: boolean
-  isAuthenticating: boolean
-  isAuthenticated: boolean
-  user: User | null
+  initialized: boolean;
+  loading: boolean;
+  token: AuthToken;
 }
 
 export interface Credentials {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }

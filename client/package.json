@@ -44,6 +44,9 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@material-ui/icons": "^3.0.2"
+    "@material-ui/icons": "^3.0.2",
+    "@types/graphql": "^14.0.7",
+    "@types/recompose": "^0.30.5",
+    "recompose": "^0.30.0"
   }
 }

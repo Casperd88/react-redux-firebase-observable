@@ -1,3 +1,3 @@
 export interface SystemState {
-  initialized: boolean
+  initialized: boolean;
 }

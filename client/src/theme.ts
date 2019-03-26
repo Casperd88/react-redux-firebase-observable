@@ -1,10 +1,10 @@
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
-    fontFamily: 'sans-serif'
+    fontFamily: "sans-serif"
   }
-})
+});
 
-export default theme
+export default theme;

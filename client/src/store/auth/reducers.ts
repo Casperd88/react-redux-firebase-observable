@@ -1,43 +1,41 @@
-import { getType, ActionType } from 'typesafe-actions'
-import { AuthState } from './types'
-import * as AuthActions from './actions'
+import { getType, ActionType } from "typesafe-actions";
+import { AuthState } from "./types";
+import * as AuthActions from "./actions";
 
 const defaultState: AuthState = {
-  user: null,
-  isInitialized: false,
-  isAuthenticated: false,
-  isAuthenticating: false
-}
+  initialized: false,
+  token: null,
+  loading: false
+};
 
 export function authReducer(
   state: AuthState = defaultState,
   action: ActionType<typeof AuthActions>
 ): AuthState {
   switch (action.type) {
-    case getType(AuthActions.requestLogin):
-    case getType(AuthActions.requestLogout):
+    case getType(AuthActions.login.request):
+    case getType(AuthActions.logout.request):
       return {
         ...state,
-        isAuthenticating: true
-      }
-    case getType(AuthActions.login):
+        loading: true
+      };
+    case getType(AuthActions.login.success):
       return {
         ...state,
-        isInitialized: true,
-        isAuthenticated: true,
-        isAuthenticating: false,
-        user: action.payload
-      }
-    case getType(AuthActions.logout):
-    case getType(AuthActions.loginFailure):
+        initialized: true,
+        loading: false,
+        token: action.payload
+      };
+    case getType(AuthActions.logout.success):
+    case getType(AuthActions.logout.failure):
+    case getType(AuthActions.login.failure):
       return {
         ...state,
-        isInitialized: true,
-        isAuthenticated: false,
-        isAuthenticating: false
-
-      }
+        initialized: true,
+        loading: false,
+        token: null
+      };
     default:
-      return state
+      return state;
   }
 }

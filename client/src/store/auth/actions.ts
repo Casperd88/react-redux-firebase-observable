@@ -1,13 +1,14 @@
-import { createStandardAction } from 'typesafe-actions'
-import { Credentials } from './types'
-import { User } from '../user/types'
+import { createAsyncAction } from "typesafe-actions";
+import { Credentials, AuthToken } from "./types";
 
-export const requestLogin = createStandardAction('@auth/LOGIN_REQUEST')<Credentials>()
-export const loginRequested = createStandardAction('@auth/LOGIN_REQUESTED')()
-export const login = createStandardAction('@auth/LOGIN')<User>()
-export const loginFailure = createStandardAction('@auth/LOGIN_FAILURE')()
+export const login = createAsyncAction(
+  "@auth/LOGIN_REQUEST",
+  "@auth/LOGIN_SUCCESS",
+  "@auth/LOGIN_FAILURE"
+)<Credentials, AuthToken, Error>();
 
-export const requestLogout = createStandardAction('@auth/LOGOUT_REQUEST')()
-export const logoutRequested = createStandardAction('@auth/LOGOUT_REQUESTED')()
-export const logout = createStandardAction('@auth/LOGOUT')()
-export const logoutFailure = createStandardAction('@auth/LOGOUT_FAILURE')()
+export const logout = createAsyncAction(
+  "@auth/LOGOUT_REQUEST",
+  "@auth/LOGOUT_SUCCESS",
+  "@auth/LOGOUT_FAILURE"
+)<undefined, undefined, Error>();
